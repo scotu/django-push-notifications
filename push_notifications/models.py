@@ -6,7 +6,7 @@ from uuidfield import UUIDField
 class Device(models.Model):
 	name = models.CharField(max_length=255, verbose_name=_("Name"), blank=True, null=True)
 	active = models.BooleanField(verbose_name=_("Is active"), default=True, help_text=_("Inactive devices will not be sent notifications"))
-	user = models.ForeignKey("auth.User", blank=True, null=True)
+	user = models.ForeignKey("mwa.User", blank=True, null=True)
 
 	class Meta:
 		abstract = True
@@ -32,7 +32,7 @@ class GCMDevice(Device):
 	# can make it turn out to be null and such:
 	# http://android-developers.blogspot.co.uk/2011/03/identifying-app-installations.html
 	device_id = UUIDField(verbose_name=_("Device ID"), blank=True, null=True, help_text="ANDROID_ID / TelephonyManager.getDeviceId()")
-	registration_id = models.TextField(verbose_name=_("Registration ID"), unique=True)
+	registration_id = models.CharField(max_length=255, verbose_name=_("Registration ID"), unique=True)
 
 	objects = GCMDeviceManager()
 

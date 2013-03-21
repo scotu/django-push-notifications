@@ -1,5 +1,5 @@
 from tastypie.authorization import Authorization
-from tastypie.authentication import BasicAuthentication
+from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
 from tastypie.fields import ForeignKey
 from tastypie.resources import ModelResource
 from .models import APNSDevice, GCMDevice
@@ -22,7 +22,7 @@ class APNSDeviceAuthenticatedResource(APNSDeviceResource):
 	# user = ForeignKey(UserResource, "user")
 
 	class Meta(APNSDeviceResource.Meta):
-		authentication = BasicAuthentication()
+		authentication = ApiKeyAuthentication()
 		# authorization = SameUserAuthorization()
 
 	def obj_create(self, bundle, **kwargs):
@@ -34,8 +34,8 @@ class GCMDeviceAuthenticatedResource(GCMDeviceResource):
 	# user = ForeignKey(UserResource, "user")
 
 	class Meta(GCMDeviceResource.Meta):
-		authentication = BasicAuthentication()
-		# authorization = SameUserAuthorization()
+		authentication = ApiKeyAuthentication()
+		#authorization = SameUserAuthorization()
 
 	def obj_create(self, bundle, **kwargs):
 		# See https://github.com/toastdriven/django-tastypie/issues/854
