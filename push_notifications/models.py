@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from uuidfield import UUIDField
+from django.conf import settings
 
 
 class Device(models.Model):
 	name = models.CharField(max_length=255, verbose_name=_("Name"), blank=True, null=True)
 	active = models.BooleanField(verbose_name=_("Is active"), default=True, help_text=_("Inactive devices will not be sent notifications"))
-	user = models.ForeignKey("mwa.User", blank=True, null=True)
+	user = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), blank=True, null=True)
 
 	class Meta:
 		abstract = True

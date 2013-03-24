@@ -1,5 +1,5 @@
 from tastypie.authorization import Authorization
-from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
+from tastypie.authentication import BasicAuthentication
 from tastypie.fields import ForeignKey
 from tastypie.resources import ModelResource
 from .models import APNSDevice, GCMDevice
@@ -22,7 +22,7 @@ class APNSDeviceAuthenticatedResource(APNSDeviceResource):
 	# user = ForeignKey(UserResource, "user")
 
 	class Meta(APNSDeviceResource.Meta):
-		authentication = ApiKeyAuthentication()
+		authentication = BasicAuthentication()
 		# authorization = SameUserAuthorization()
 
 	def obj_create(self, bundle, **kwargs):
@@ -34,7 +34,7 @@ class GCMDeviceAuthenticatedResource(GCMDeviceResource):
 	# user = ForeignKey(UserResource, "user")
 
 	class Meta(GCMDeviceResource.Meta):
-		authentication = ApiKeyAuthentication()
+		authentication = BasicAuthentication()
 		#authorization = SameUserAuthorization()
 
 	def obj_create(self, bundle, **kwargs):
