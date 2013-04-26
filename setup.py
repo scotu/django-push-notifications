@@ -16,12 +16,13 @@ CLASSIFIERS = [
 	"Topic :: System :: Networking",
 ]
 
-VERSION = "0.8"
+VERSION = "0.9"
 
 setup(
 	name = "django-push-notifications",
-	py_modules = ["push_notifications"],
-	package_dir = {"push_notifications": "push_notifications"},
+        packages = ["push_notifications"],
+	#py_modules = ["push_notifications"],
+	#package_dir = {"push_notifications": "push_notifications"},
 	author = "Jerome Leclanche",
 	author_email = "jerome.leclanche+pypi@gmail.com",
 	classifiers = CLASSIFIERS,
