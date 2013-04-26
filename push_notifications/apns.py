@@ -46,11 +46,12 @@ def _apns_pack_message(token, data):
 	format = "!cH32sH%ds" % (len(data))
 	return struct.pack(format, b"\0", 32, unhexlify(token), len(data), data)
 
-def _apns_send(token, alert, badge=0, sound="chime", content_available=False, custom_params={}, action_loc_key=None, loc_key=None, loc_args=[], socket=None):
+def _apns_send(token, content, badge=0, sound="chime", content_available=False, custom_params={}, action_loc_key=None, loc_key=None, loc_args=[], socket=None):
 	data = {}
-
+	#alert = {}
+ 
 	if action_loc_key or loc_key or loc_args:
-		alert = {"body": alert}
+		alert = {} #{"body": alert}
 		if action_loc_key:
 			alert["action-loc-key"] = action_loc_key
 		if loc_key:
@@ -58,7 +59,7 @@ def _apns_send(token, alert, badge=0, sound="chime", content_available=False, cu
 		if loc_args:
 			alert["loc-args"] = loc_args
 
-	data["alert"] = alert
+	#data["alert"] = alert
 
 	if badge:
 		data["badge"] = badge
@@ -68,10 +69,10 @@ def _apns_send(token, alert, badge=0, sound="chime", content_available=False, cu
 
 	if content_available:
 		data["content-available"] = 1
-
+  
 	# convert to json, avoiding unnecessary whitespace with sepatators
-	data = json.dumps({"aps": data}, separators=(",",":"))
-
+	data = json.dumps({"aps": data, "content": content}, separators=(",",":"))
+ 
 	if len(data) > APNS_MAX_NOTIFICATION_SIZE:
 		raise APNSDataOverflow("Notification body cannot exceed %i bytes" % (APNS_MAX_NOTIFICATION_SIZE))
 
