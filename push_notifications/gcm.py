@@ -44,15 +44,22 @@ def gcm_send_message(registration_id, data, collapse_key=None):
 	gcm_send_bulk_message()
 	"""
 	from urllib import urlencode
-
+	#import ipdb; ipdb.set_trace()
+ 
 	values = {
 		"registration_id": registration_id,
 		"collapse_key": collapse_key,
 	}
+	values["data.msg"] = data['msg'] #.encode("utf-8")
+	values["data.content"] = data['content'] #.encode("utf-8")
+	values.update(data)
 
-	for k, v in data.items():
-		values["data.%s" % (k)] = v.encode("utf-8")
-
+	#for k, v in data.items():
+	#	values["data.%s" % (k)] = v['msg'] #.encode("utf-8")
+	#import ipdb; ipdb.set_trace()
+	
+	#values["data.contet"] = data['content'] #.encode("utf-8")
+  
 	data = urlencode(values)
 	return _gcm_send(data, "application/x-www-form-urlencoded;charset=UTF-8")
 

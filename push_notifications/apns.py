@@ -6,7 +6,6 @@ https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Concep
 
 import json
 import struct
-import urllib2
 from binascii import unhexlify
 from django.conf import settings
 from . import NotificationError, PUSH_NOTIFICATIONS_SETTINGS as SETTINGS
@@ -46,33 +45,33 @@ def _apns_pack_message(token, data):
 	format = "!cH32sH%ds" % (len(data))
 	return struct.pack(format, b"\0", 32, unhexlify(token), len(data), data)
 
-def _apns_send(token, content, badge=0, sound="chime", content_available=False, custom_params={}, action_loc_key=None, loc_key=None, loc_args=[], socket=None):
-	data = {}
+def _apns_send(token, data, badge=0, sound="chime", content_available=False, custom_params={}, action_loc_key=None, loc_key=None, loc_args=[], socket=None):
+	#data = {}
 	#alert = {}
  
-	if action_loc_key or loc_key or loc_args:
-		alert = {} #{"body": alert}
-		if action_loc_key:
-			alert["action-loc-key"] = action_loc_key
-		if loc_key:
-			alert["loc-key"] = loc_key
-		if loc_args:
-			alert["loc-args"] = loc_args
+#	if action_loc_key or loc_key or loc_args:
+#		alert = {} #{"body": alert}
+#		if action_loc_key:
+#			alert["action-loc-key"] = action_loc_key
+#		if loc_key:
+#			alert["loc-key"] = loc_key
+#		if loc_args:
+#			alert["loc-args"] = loc_args
 
 	#data["alert"] = alert
 
-	if badge:
-		data["badge"] = badge
-
-	if sound:
-		data["sound"] = sound
-
-	if content_available:
-		data["content-available"] = 1
+#	if badge:
+#		data["badge"] = badge
+#
+#	if sound:
+#		data["sound"] = sound
+#
+#	if content_available:
+#		data["content-available"] = 1
   
 	# convert to json, avoiding unnecessary whitespace with sepatators
-	data = json.dumps({"aps": data, "content": content}, separators=(",",":"))
- 
+	#data = json.dumps({"aps": data, "content": content}, separators=(",",":"))
+	#data = json.dumps(data, separators=(",",":"))
 	if len(data) > APNS_MAX_NOTIFICATION_SIZE:
 		raise APNSDataOverflow("Notification body cannot exceed %i bytes" % (APNS_MAX_NOTIFICATION_SIZE))
 
@@ -95,7 +94,7 @@ def apns_send_message(registration_id, data, **kwargs):
 	Note that \a data is sent as a string.
 	"""
 
-	return _apns_send(registration_id, str(data), **kwargs)
+	return _apns_send(registration_id, json.dumps(data), **kwargs)
 
 def apns_send_bulk_message(registration_ids, data):
 	"""
@@ -104,4 +103,4 @@ def apns_send_bulk_message(registration_ids, data):
 	"""
 	socket = _apns_create_socket()
 	for registration_id in registration_ids:
-		_apns_send(registration_id, str(data), socket=socket, **kwargs)
+		_apns_send(registration_id, json.dumps(data), socket=socket, **kwargs)
