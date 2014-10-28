@@ -30,12 +30,9 @@ def _gcm_send(data, content_type):
         "Content-Length": str(len(data)),
     }
 
-    import requests
-    response = requests.post(SETTINGS["GCM_POST_URL"], data=data, headers=headers)
-    result = response.text
-    # request = urllib2.Request(SETTINGS["GCM_POST_URL"], data, headers)
-    # response = urllib2.urlopen(request)
-    # result = response.read()
+    request = urllib2.Request(SETTINGS["GCM_POST_URL"], data, headers)
+    response = urllib2.urlopen(request)
+    result = response.read()
 
     if result.startswith("Error="):
         raise GCMError(result)
